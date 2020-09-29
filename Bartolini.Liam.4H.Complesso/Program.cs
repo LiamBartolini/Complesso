@@ -82,6 +82,8 @@ namespace Bartolini.Liam._4H.Complesso
         {
             reale = a;
             immaginaria = b;
+            assoluto = c;
+            fi = d;
         }
 
         public void Fi(Complesso w1)
