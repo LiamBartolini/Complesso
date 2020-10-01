@@ -2,12 +2,11 @@
 
 namespace Bartolini.Liam._4H.Complesso
 {
-    class Program
+        class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Classe complesso");
-
+            Console.WriteLine("Bartolini Liam, Complesso2");
             Complesso z1 = new Complesso(4, 5, 0, 0);
             Complesso z2 = new Complesso(2, 1, 0, 0);
             Complesso zr = new Complesso();
@@ -15,7 +14,7 @@ namespace Bartolini.Liam._4H.Complesso
 
             Console.WriteLine("\r\nSeleziona l'operazione");
             Console.WriteLine("1.Somma\r\n2.Sottrazione\r\n3.Moltiplicazione\r\n4.Divisione");
-            while(true)
+            while (true)
             {
                 strChoice = Console.ReadLine();
                 if (strChoice == "1" || strChoice == "2" || strChoice == "3" || strChoice == "4")
@@ -49,20 +48,40 @@ namespace Bartolini.Liam._4H.Complesso
             if (strComplex == "1")
             {
                 zr.Assoluto(z1);
-                zr.Fi(z1);
-                
+                zr.Phi(z1);
+
                 Console.WriteLine($"numero scelto: {z1.reale} + {z1.immaginaria}i");
             }
             else
             {
                 zr.Assoluto(z2);
-                zr.Fi(z2);
+                zr.Phi(z2);
                 Console.WriteLine($"numero scelto: {z2.reale} + {z2.immaginaria}i");
             }
             Console.ResetColor();
 
-            Console.WriteLine($"Il valore assoluto è |{zr.assoluto:n2}|");
-            Console.WriteLine($"Il valore dell'argomento é phi = {zr.fi:n2}°");
+            Console.WriteLine($"Il valore assoluto è |{zr.modulo:n2}|");
+            Console.WriteLine($"Il valore dell'argomento é phi = {zr.fase:n2}°");
+
+            //_____________________________________________________
+            //richiedo e splitto il modulo e la fase, faccio i calcoli per convertirli e li passo all'oggetto
+            Console.WriteLine("Inserisci modulo e fase di un numero (usare la virgola tra modulo e fase): ");
+            string strModFase = Console.ReadLine();
+            string[] mod = strModFase.Split(",");
+            double modulo1 = Math.Cos(Convert.ToDouble(mod[0]) * (Math.PI / 180));
+            double fase1 = Math.Sin(Convert.ToDouble(mod[1]) * (Math.PI / 180));
+
+            Complesso modFas = new Complesso(modulo1, fase1);
+
+            //richiamo il metodo e converto in polare
+            string polar = modFas.ToPolar(modulo1, fase1);
+            Console.WriteLine($"forma polare: {polar}");
+
+            Console.WriteLine($"COSENO PRIMA {modulo1:n3} SENO PRIMA {fase1:n3}");
+
+            //richiamo il metodo e converto in binomiale
+            string binomial = modFas.ToBinomial(Math.Cosh(modFas.modulo), Math.Sinh(modFas.fase));
+            Console.WriteLine($"forma binomiale: {binomial}");
         }
     }
 
@@ -70,8 +89,8 @@ namespace Bartolini.Liam._4H.Complesso
     {
         public double reale;
         public double immaginaria;
-        public double assoluto;
-        public double fi;
+        public double modulo;
+        public double fase;
 
         public Complesso()
         {
@@ -82,19 +101,37 @@ namespace Bartolini.Liam._4H.Complesso
         {
             reale = a;
             immaginaria = b;
-            assoluto = c;
-            fi = d;
+            modulo = c;
+            fase = d;
         }
 
-        public void Fi(Complesso w1)
+        public Complesso(double modulo1, double fase1)
         {
-            //calcolo l'arcotangente di un numero in radianti e lo converto in gradi
-            fi = Math.Atan(w1.immaginaria / w1.reale) * (180 /Math.PI);
+            modulo = modulo1;
+            fase = fase1;
         }
 
+        public string ToPolar(double modulo, double fase)
+        {
+            return $"|{modulo:n3}| e {fase:n3}°";
+        }
+
+        public string ToBinomial(double reale, double immaginaria)
+        {
+            return $"{reale:n3} + {immaginaria:n3}i";
+        }
+
+        //calcolo fase
+        public void Phi(Complesso w1)
+        {
+            //calcolo l'arcotangente di un numero in radianti
+            fase = Math.Atan(w1.immaginaria / w1.reale);
+        }
+
+        //calcolo modulo
         public void Assoluto(Complesso w1)
         {
-            assoluto = Math.Sqrt(Math.Pow(w1.reale, 2)+ Math.Pow(w1.immaginaria, 2));
+            modulo = Math.Sqrt(Math.Pow(w1.reale, 2) + Math.Pow(w1.immaginaria, 2));
         }
 
         public void Somma(Complesso w1, Complesso w2)
